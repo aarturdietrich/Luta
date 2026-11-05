@@ -1,0 +1,15 @@
+rules_version = '2';
+
+// Paste this into Firebase console → Firestore Database → Rules (SETUP.md, step 4).
+//
+// All of Luta's data lives in spaces/<id>/..., where <id> is a 64-character code
+// made from your family PIN. Nobody can list which spaces exist, so a phone can
+// only reach the data if it knows the PIN.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /spaces/{spaceId}/{collection}/{docId} {
+      allow read, write: if spaceId.size() == 64
+        && collection in ['vaccines', 'deworming', 'weights', 'photos', 'photoData', 'meta', 'tokens'];
+    }
+  }
+}
